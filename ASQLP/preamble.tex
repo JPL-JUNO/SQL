@@ -1,0 +1,48 @@
+\usepackage{ctex}
+\usepackage{mathptmx}
+\usepackage{minted}
+\usepackage{tcolorbox}
+\usepackage{epigraph}
+\usepackage{caption}
+\usepackage{graphicx}
+\setkeys{Gin}{width=0.75\textwidth}
+\usepackage{listings}
+
+%\setminted[python]{bgcolor=red!5, linenos, breakanywhere=true}
+
+
+
+\title{Advanced SQL Programming}
+	
+\author{Stephen CUI}
+\date{November 4, 2022}
+
+
+\tcbuselibrary{minted, skins, breakable}
+\newtcblisting[auto counter, number within =section]{sql}[1]{listing engine=minted,
+						 minted style=colorful,
+						 minted language=SQL,
+						 minted options={breaklines,autogobble,linenos,numbersep=3mm},
+						 colback=orange!5!white,colframe=orange!70!black,listing only, left=5mm,enhanced,
+						 title=Examples~\thetcbcounter~#1,
+						 breakable,
+						 enhanced
+%						 overlay={
+%						 	\begin{tcbclipinterior}
+%						 		\fill[red!30!white] (frame.south west)
+%						 		rectangle ([xshift=5mm]frame.north west);
+%							\end{tcbclipinterior}}
+							}
+							
+\usepackage{geometry}
+\geometry{left=2.45cm,right=2.45cm, top=2.77cm, bottom=2.77cm}
+
+\usepackage{hyperref}
+\hypersetup{
+	colorlinks=true,
+	linkcolor=orange!70!black,
+	filecolor=blue,      
+	urlcolor=orange!80!white,
+	citecolor=green,
+}
+
