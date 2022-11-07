@@ -1,5 +1,5 @@
 # SQL进阶教程
 
-## Advanced SQL Programming
+## Advanced SQL Tutorial
 
 Contributor(s): Stephen CUI
