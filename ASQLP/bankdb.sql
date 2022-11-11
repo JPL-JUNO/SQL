@@ -90,4 +90,40 @@ select * from tradeinfo;
 select * from deposit;
 
 -- (1)修改客户密码：张三，李四
+update cardinfo set `password`=123456 where cardid='1010357612125678';
+update cardinfo set `password`=123123 where cardid='1010357612121134';
 
+-- (2)办理一行卡挂失：李四
+update cardinfo set isreportloss=1 where cardid='1010357612121134';
+
+select c.cardid '卡号', c.curid '货币', d.savingname '存储类型', c.openmoney '开户金额', c.balance '账户余额',
+c.`password` '密码', c.isreportloss '是否挂失', u.customername '客户姓名'
+from cardinfo c
+inner join userinfo u
+on c.customerid=u.customerid
+inner join deposit d
+on c.savingid=d.savingid;
+
+-- 统计银行总存入金额和总支出金额
+select transtype '资金流向', sum(transmoney) '总金额' from tradeinfo
+group by transtype;
+
+-- 查询本周开户信息
+select c.cardid '卡号', u.customername '姓名', c.curid '货币类型', d.savingname '存储类型', 
+	c.opendate '开户时间', c.openmoney '开户金额', c.balance '余额', c.isreportloss '是否挂失'
+from userinfo u
+inner join cardinfo c
+on u.customerid = c.customerid
+inner join deposit d
+on c.savingid = d.savingid
+where week(c.opendate) = week(now());
+
+select cardid from tradeinfo where transmoney=(
+	select max(transmoney) from tradeinfo where month(transdate)=month(now())
+);
+select *, rank() over(partition by cardid order by transmoney) ranks from tradeinfo;
+select cardid from tbl where amt=(select max(amt) from (select cardid, sum(transmoney) amt from tradeinfo group by cardid) as tbl);
+
+select t.cardid from tradeinfo t 
+	join (select cardid, sum(transmoney) as amt from tradeinfo group by cardid) b 
+    on t.cardid=b.cardid;
