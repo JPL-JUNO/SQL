@@ -28,11 +28,12 @@ CASE 表达式的真假值判断就会中止，而剩余的 WHEN 子句会被忽
 \begin{sql}{WHEN子句的排他性}
 -- 剩余的WHEN子句被忽略的写法示例
 CASE 
-WHEN COL_1 IN {'A', 'B'} THEN 'FIRSTT'
-WHEN COL_1 IN {'A'} THEN 'SECOND'
+WHEN COL_1 IN ('A', 'B') THEN 'FIRSTT'
+WHEN COL_1 IN ('A') THEN 'SECOND'
      ELSE 'OTHERS' END;
 \end{sql}
-\catutions
+
+\cautions
 
 \begin{enumerate}
 \item 统一各分支返回的数据类型
@@ -153,9 +154,195 @@ GROUP BY pref_name;
 格式。}
 \subsection{用CHECK约束定义多个列的条件关系}
 \subsection{在UPDATE语句里进行条件分支}
+如果 CASE 表达式里没有明确指定 ELSE 子句，执行结果会被默认地处理成 ELSE NULL。
 
+这个技巧的应用范围很广。例如，可以用它简单地完成主键值调换这
+种繁重的工作。通常，当我们想调换主键值 a 和 b 时，需要将主键值临时
+转换成某个中间值。使用这种方法时需要执行 3 次 UPDATE 操作，但是如
+果使用 CASE 表达式，1 次就可以做到。
 
+\begin{sqlc}
+update sometable
+	set p_key = 'd'
+	where p_key = 'a';
+    
+update sometable
+	set p_key = 'a'
+    where p_key = 'b';
 
+update sometable
+	set p_key = 'b'
+    where p_key = 'd';
+\end{sqlc}
+这里没有必要执行 3 次
+UPDATE 操作，而且中间值 d 是否总能使用也是问题。而如果使用 CASE 表
+达式，就不必担心这些，1 次就可以完成调换\footnote{如果在 PostgreSQL 和 MySQL 数据
+库执行这条 SQL 语句，会因主键
+重复而出现错误。但是，约束的
+检查本来就发生在更新完成后，
+因此更新途中主键一时出现重复
+也没有问题。事实上，在 Oracle、
+DB2、SQL Server 数 据 库 执 行 都
+没有问题。}。
+\begin{sqlc}
+update sometable
+	set p_key = case 
+    when p_key = 'a' then 'b'
+    when p_key = 'b' then 'a'
+    else p_key end
+where p_key in ('a', 'b');
+\end{sqlc}
+\subsection{表之间的数据匹配}
+与 DECODE 函数等相比，CASE 表达式的一大优势在于能够判断表达式。
+也就是说，在 CASE 表达式里，我们可以使用 BETWEEN、LIKE 和 $\textgreater$、 $\textless$ 等
+便利的谓词组合，以及能嵌套子查询的 IN 和 EXISTS 谓词。因此，CASE
+表达式具有非常强大的表达能力。
 
+\href{}{建表命令点击这里Course}
 
+我们需要做的是，检查表 OpenCourses 中的各月里有表 CourseMaster
+中的哪些课程。这个匹配条件可以用 CASE 表达式来写。
 
+\begin{sqlc}
+select course_name, 
+	case when course_id in 
+	(select course_id from opencourses where month=200706) 
+    then 'yes' else 'no' end as 'June',
+    case when course_id in 
+	(select course_id from opencourses where month=200707) 
+    then 'yes' else 'no' end 'July',
+    case when course_id in 
+	(select course_id from opencourses where month=200708) 
+    then 'yes' else 'no' end 'August'
+    from coursemaster;
+\end{sqlc}
+
+\begin{sqlc}
+select cm.course_name,
+	case when exists
+		(select course_id from opencourses oc
+         where month=200706 and oc.course_id = cm.course_id)
+		then 'Yes' else 'No' end 'June',
+	case when exists
+		(select course_id from opencourses oc
+         where month=200707 and oc.course_id = cm.course_id)
+		then 'Yes' else 'No' end 'July',
+	case when exists
+		(select course_id from opencourses oc
+         where month=200708 and oc.course_id = cm.course_id)
+		then 'Yes' else 'No' end 'August'
+	from coursemaster cm;
+\end{sqlc}
+
+这样的查询没有进行聚合，因此也不需要排序，月份增加的时候仅修
+改 SELECT 子句就可以了，扩展性比较好。
+
+无论使用 IN 还是 EXISTS，得到的结果是一样的，但从性能方面来说，
+EXISTS 更好。
+
+\subsection{在 CASE 表达式中使用聚合函数}
+接下来介绍一下稍微高级的用法。这个用法乍一看可能让人觉得像是
+语法错误，实际上却并非如此。
+
+\href{}{建表命令点击这里StudentClub}
+
+\begin{sqlc}
+select std_id, max(club_id) as main_club
+	from studentclub
+    group by std_id
+    having count(*) = 1
+union all
+select std_id, club_id as main_club
+	from studentclub
+    where main_club_flg = 'Y';
+\end{sqlc}
+
+这样做也能得到正确的结果，但需要写多条 SQL 语句。而如果使用
+CASE 表达式，下面这一条 SQL 语句就可以了。
+
+\begin{sqlc}
+select std_id, 
+	case when count(*) = 1
+		then max(club_id) 
+		else max(case when main_club_flg = 'Y' then club_id else null end)
+    end 'main_club'
+	from studentclub
+    group by std_i
+\end{sqlc}
+
+这条 SQL 语句在 CASE 表达式里使用了聚合函数，又在聚合函数里
+使用了 CASE 表达式。
+
+\subsection{本节小结}
+\begin{enumerate}
+\item 在 GROUP BY 子句里使用 CASE 表达式，可以灵活地选择作为聚合
+的单位的编号或等级。这一点在进行非定制化统计时能发挥巨大的威力。
+\item 在聚合函数中使用 CASE 表达式，可以轻松地将行结构的数据转换
+成列结构的数据。
+\item 相反，聚合函数也可以嵌套进 CASE 表达式里使用。
+\item 相比依赖于具体数据库的函数，CASE 表达式有更强大的表达能力
+和更好的可移植性。
+\item 正因为 CASE 表达式是一种表达式而不是语句，才有了这诸多优点。
+\end{enumerate}
+
+\section{用SQL进行集合运算}
+SQL 语言的基础之一是集合论。但是，很长一段时间内，由于 SQL 没能很好地支持集合运算，所以
+相关功能并没有被人们充分地利用。过去这些年，SQL 凑齐了大部分基础的集合运算，人们终于可以真
+正地使用它了。
+\subsection{写在前面}
+集合论是 SQL 语言的根基——这是贯穿全书的主题之一。因为它的
+这个特性，SQL 也被称为面向集合语言。
+
+\subsection{导入篇 ：集合运算的几个注意事项\label{intro17}}
+顾名思义，集合运算符的参数是集合，从数据库实现层面上来说就是
+表或者视图。因为和高中学过的集合代数很像，所以理解起来相对比较容
+易。但是，SQL 还是有几个特别的地方需要注意一下。
+
+\cautions
+
+\begin{enumerate}
+\item SQL 能操作具有重复行的集合，可以通过可选项 ALL来支持
+
+一般的集合论是不允许集合里存在重复元素的，因此集合 \{1, 1, 2, 3, 3,
+3\} 和集合 \{1, 2, 3\} 被视为相同的集合。但是关系数据库里的表允许存在重
+复的行，称为多重集合（multiset, bag）。
+
+因此，SQL 的集合运算符也提供了允许重复和不允许重复的两种用法。
+如果直接使用 UNION 或 INTERSECT，结果里就不会出现重复的行。如果
+想在结果里留下重复行，可以加上可选项 ALL，写作 UNION ALL。ALL 的
+作用和 SELECT 子句里的 DISTINCT 可选项刚好相反。
+
+除了运算结果以外，这两种用法还有一个不同。集合运算符为了排除
+掉重复行，默认地会发生排序，而加上可选项 ALL 之后，就不会再排序，
+所以性能会有提升。这是非常有效的用于优化查询性能的方法，所以如果
+不关心结果是否存在重复行，或者确定结果里不会产生重复行，加上可选
+项 ALL 会更好些。
+\item 集合运算符有优先级
+
+标准 SQL 规定，INTERSECT 比 UNION 和 EXCEPT 优先级更高。因此，
+当同时使用 UNION 和 INTERSECT，又想让 UNION 优先执行时，必须用括
+号明确地指定运算顺序
+\item 各个 DBMS 提供商在集合运算的实现程度上参差不齐
+\item 除法运算没有标准定义
+
+四则运算里的和（UNION）、差（EXCEPT）、积（CROSS JOIN）都被引入了标准 SQL。但是很遗憾，商（DIVIDE BY）因为各种原因迟迟没能标
+准化。
+\end{enumerate}
+
+\subsection{比较表和表 ：检查集合相等性之基础篇}
+在迁移数据库的时候，或者需要比较备份数据和最新数据的时候，我
+们需要调查两张表是否是相等的。这里说的“相等”指的是行数和列数以
+及内容都相同，即“是同一个集合”的意思。
+
+此时做法有两种。我们先看一个简单的，只用 UNION 就能实现的方法。
+这里先假设已经事先确认了表 \verb|tbl_A| 和表 \verb|tbl_B| 的行数是一样的（如果行
+数不一样，那就不需要比较其他的了）。
+
+这种做法的原理是什么呢？请回忆一下\nameref{intro17}里的注意事项 1。
+如果集合运算符里不加上可选项 ALL，那么重复行就会被排除掉。因此，
+如果表 \verb|tbl_A| 和表 \verb|tbl_B| 是相等的，排除掉重复行后，两个集合是完全重
+合的。
+
+当然，我们也可
+以只比较表里的一部分列或者一部分行。只需要指定一下想要比较的列的
+名称，或者在 WHERE 子句里加入过滤条件就可以比较了。
