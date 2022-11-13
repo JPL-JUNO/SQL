@@ -1,6 +1,6 @@
 \usepackage{ctex}
 \usepackage{color}
-\newcommand\catutions{\textbf{\textcolor{red!90!black}{注意事项：}}}
+\newcommand\cautions{\textbf{\textcolor{red!90!black}{注意事项：}}}
 
 \usepackage{mathptmx}
 \usepackage{minted}
@@ -12,12 +12,12 @@
 \usepackage{listings}
 
 %\setminted[python]{bgcolor=red!5, linenos, breakanywhere=true}
+\newminted[sqlc]{sql}{bgcolor=blue!5, linenos, breakanywhere=true}
 
 
-
-\title{Advanced SQL Tutorial}
-	
-\author{Stephen CUI}
+\title{SQL进阶教程\\ \textbf{Advanced SQL Tutorial}}
+\author{Stephen CUI\thanks{cuixuanStephen@gmail.com}
+}
 \date{November 4, 2022}
 
 
@@ -26,7 +26,7 @@
 						 minted style=colorful,
 						 minted language=SQL,
 						 minted options={breaklines,autogobble,linenos,numbersep=3mm},
-						 colback=red!5!white,colframe=orange!70!black,listing only, left=5mm,enhanced,
+						 colback=red!5!white,colframe=blue!70!black,listing only, left=5mm,enhanced,
 						 title=Examples~\thetcbcounter~#1,
 						 breakable,
 						 enhanced
@@ -43,9 +43,9 @@
 \usepackage{hyperref}
 \hypersetup{
 	colorlinks=true,
-	linkcolor=orange!70!black,
+	linkcolor=blue!70!black,
 	filecolor=blue,      
-	urlcolor=orange!80!white,
+	urlcolor=blue!80!white,
 	citecolor=green,
 }
 
