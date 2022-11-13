@@ -25,3 +25,8 @@ SET
         WHEN salary >= 300000 THEN salary * .9
         WHEN salary >= 250000 AND salary < 280000 THEN salary * 1.2
         ELSE salary END;
+        
+-- 剩余的WHEN子句被忽略的写法示例
+CASE WHEN COL_1 IN {'A', 'B'} THEN 'FIRSTT'
+WHEN COL_1 IN {'A'} THEN 'SECOND'
+     ELSE 'OTHERS' END;

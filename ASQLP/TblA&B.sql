@@ -1,0 +1,27 @@
+CREATE TABLE IF NOT EXISTS Tbl_A (
+    keycol CHAR(1) PRIMARY KEY,
+    col_1 INTEGER,
+    col_2 INTEGER,
+    col_3 INTEGER
+);
+
+CREATE TABLE IF NOT EXISTS Tbl_B (
+    keycol CHAR(1) PRIMARY KEY,
+    col_1 INTEGER,
+    col_2 INTEGER,
+    col_3 INTEGER
+);
+
+-- 关闭安全模式才能删除表格中的数据
+-- SET SQL_SAFE_UPDATES = 0;
+SET SQL_SAFE_UPDATES = off;
+
+DELETE FROM Tbl_A;
+INSERT INTO Tbl_A VALUES('A', 2, 3, 4);
+INSERT INTO Tbl_A VALUES('B', 0, 7, 9);
+INSERT INTO Tbl_A VALUES('C', 5, 1, 6);
+
+DELETE FROM Tbl_B;
+INSERT INTO Tbl_B VALUES('A', 2, 3, 4);
+INSERT INTO Tbl_B VALUES('B', 0, 7, 9);
+INSERT INTO Tbl_B VALUES('C', 5, 1, 6);
