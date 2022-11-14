@@ -1,7 +1,8 @@
 \usepackage{ctex}
 \usepackage{color}
+\usepackage{xcolor}
 \newcommand\cautions{\textbf{\textcolor{red!90!black}{注意事项：}}}
-
+\newcommand\keyscolor[1]{\textcolor{blue!80}{#1}}
 \usepackage{mathptmx}
 \usepackage{minted}
 \usepackage{tcolorbox}
@@ -19,6 +20,12 @@
 \author{Stephen CUI\thanks{cuixuanStephen@gmail.com}
 }
 \date{November 4, 2022}
+
+\newcommand\rules[1]{\begin{tcolorbox}[colback=blue!5!white,colframe=blue!80!black,title=法则]
+#1
+\end{tcolorbox}
+}
+
 
 
 \tcbuselibrary{minted, skins, breakable}
