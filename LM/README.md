@@ -1,3 +1,8 @@
-# Learning MySQL Get a Handle on Your Data
+# Learning MySQL 
 
-Contributor(s): Stephen CUI
+## Get a Handle on Your Data
+
+## Contributor(s):
+
+- [Stephen CUI](https://github.com/JPL-JUNO)
+- 
