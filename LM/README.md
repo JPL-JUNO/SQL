@@ -5,4 +5,3 @@
 ## Contributor(s):
 
 - [Stephen CUI](https://github.com/JPL-JUNO)
-- 

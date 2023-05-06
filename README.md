@@ -1,6 +1,6 @@
 # SQL Learning
 
-## Contributor(s): 
+## Contributor(s)
 
 - [Stephen CUI](https://github.com/JPL-JUNO)
 
