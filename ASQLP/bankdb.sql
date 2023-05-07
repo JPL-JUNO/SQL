@@ -1,3 +1,4 @@
+-- USE ASQLP;
 drop table if exists userInfo;
 -- 创建银行客户表
 create table if not exists userinfo(
