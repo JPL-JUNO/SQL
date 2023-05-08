@@ -1,0 +1,19 @@
+CREATE TABLE
+    IF NOT EXISTS LoadSample(
+        sample_date DATE PRIMARY KEY,
+        load_val INTEGER NOT NULL
+    );
+
+INSERT INTO LoadSample VALUES('2018-02-01', 1024);
+
+INSERT INTO LoadSample VALUES('2018-02-02', 2366);
+
+INSERT INTO LoadSample VALUES('2018-02-05', 2366);
+
+INSERT INTO LoadSample VALUES('2018-02-07', 985);
+
+INSERT INTO LoadSample VALUES('2018-02-08', 780);
+
+INSERT INTO LoadSample VALUES('2018-02-12', 1000);
+
+SELECT * FROM LoadSample;

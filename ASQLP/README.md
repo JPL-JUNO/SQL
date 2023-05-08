@@ -1,5 +1,12 @@
-# SQL进阶教程
+# SQL进阶教程（ASQLP）
 
-## Advanced SQL Tutorial
+## Contributor(s)
 
-Contributor(s): Stephen CUI
+- Stephen CUI
+
+## Contents
+
+1. 神奇的SQL
+   - CASE表达式
+2. 关系数据库的世界
+3. 附录
