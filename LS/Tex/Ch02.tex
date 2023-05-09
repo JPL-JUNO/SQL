@@ -1,0 +1,47 @@
+\chapter{Creating and Populating a Database\label{Ch02}}
+\section{MySQL Data Types}
+\subsection{Character Data}
+Character data can be stored as either fixed-length or variable-length strings; the difference is that fixed-length strings are right-padded with spaces and always consume the same number of bytes, and variable-length strings are not right-padded with spaces and don't always consume the same number of bytes.
+
+The maximum length for char columns is currently 255 bytes, whereas varchar columns can be up to 65,535 bytes. If you need to store longer strings (such as emails,
+XML documents, etc.), then you will want to use one of the text types (mediumtext
+and longtext).
+
+\begin{tcolorbox}
+    An exception is made in the use of varchar for Oracle Database. Oracle users should use the varchar2 type when defining variable-length character columns.
+\end{tcolorbox}
+
+\subsubsection*{Character sets}
+
+You may choose to use a different character set for each character column in your database, and you can even store different character sets within the same table. To choose a character set other than the default when defining a column, simply name one of the supported character sets after the type definition.
+
+\textsf{varchar(20) character set latin1}
+
+With MySQL, you may also set the default character set for your entire database:
+
+\textsf{create database european\_sales character set latin1;}
+
+\subsubsection*{Text data}
+If you need to store data that might exceed the 64 KB limit for varchar columns, you will need to use one of the text types.
+\begin{table}
+    \centering
+    \caption{MySQL text types}
+    \label{tbl2-1}
+    \begin{tabular}{ll}
+        \hline
+        Text type  & Maximum number of bytes \\
+        \hline
+        tinytext   & 255                     \\
+        text       & 65,535                  \\
+        mediumtext & 16,777,215              \\
+        longtext   & 4,294,967,295           \\
+        \hline
+    \end{tabular}
+\end{table}
+
+When choosing to use one of the text types, you should be aware of the following:
+\begin{itemize}
+    \item If the data being loaded into a text column exceeds the maximum size for that type, the data will be truncated.
+    \item Trailing spaces will not be removed when data is loaded into the column.
+    \item When using text columns for sorting or grouping, only the first 1,024 bytes are used, although this limit may be increased if necessary.
+\end{itemize}
