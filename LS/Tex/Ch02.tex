@@ -27,7 +27,7 @@ If you need to store data that might exceed the 64 KB limit for varchar columns,
     \centering
     \caption{MySQL text types}
     \label{tbl2-1}
-    \begin{tabular}{ll}
+    \begin{tabular}{lr}
         \hline
         Text type  & Maximum number of bytes \\
         \hline
@@ -45,3 +45,19 @@ When choosing to use one of the text types, you should be aware of the following
     \item Trailing spaces will not be removed when data is loaded into the column.
     \item When using text columns for sorting or grouping, only the first 1,024 bytes are used, although this limit may be increased if necessary.
 \end{itemize}
+
+\section{Table Creation}
+\section{Populating and Modifying Tables}
+\subsection{Inserting Data}
+There are three main components to an insert statement:
+\begin{itemize}
+    \item The name of the table into which to add the data
+    \item The names of the columns in the table to be populated
+    \item The values with which to populate the columns
+\end{itemize}
+\subsubsection*{Generating numeric key data}
+\begin{tcolorbox}
+    If you are running these statements in your database, you will first need to disable the foreign key constraint on the table, and then re-enable the constraints when finished. The progression of statements would be:
+
+    \textsf{set foreign\_key\_checks=0;}
+\end{tcolorbox}
