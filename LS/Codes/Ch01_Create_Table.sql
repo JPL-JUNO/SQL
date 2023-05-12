@@ -1,4 +1,4 @@
--- Active: 1683725252949@@127.0.0.1@3306@ls
+-- Active: 1683522513166@@127.0.0.1@3306@ls
 
 USE LS;
 
@@ -30,3 +30,26 @@ SET FOREIGN_KEY_CHECKS=0;
 ALTER TABLE PERSON MODIFY PERSON_ID SMALLINT UNSIGNED AUTO_INCREMENT;
 
 SET FOREIGN_KEY_CHECKS=1;
+
+INSERT INTO
+    PERSON (
+        PERSON_ID,
+        FNAME,
+        LNAME,
+        EYE_COLOR,
+        BIRTH_DATE
+    )
+VALUES (
+        NULL,
+        'WILLIAM',
+        'TURNER',
+        'BR',
+        '1972-05-27'
+    );
+
+SELECT
+    PERSON_ID,
+    FNAME,
+    LNAME,
+    BIRTH_DATE
+FROM PERSON;
