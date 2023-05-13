@@ -1,4 +1,4 @@
--- Active: 1683522513166@@127.0.0.1@3306@ls
+-- Active: 1683725252949@@127.0.0.1@3306@ls
 
 USE LS;
 
@@ -53,3 +53,79 @@ SELECT
     LNAME,
     BIRTH_DATE
 FROM PERSON;
+
+SELECT
+    PERSON_ID,
+    FNAME,
+    LNAME,
+    BIRTH_DATE
+FROM PERSON
+WHERE PERSON_ID = 1;
+
+SELECT
+    PERSON_ID,
+    FNAME,
+    LNAME,
+    BIRTH_DATE
+FROM PERSON
+WHERE LNAME = 'TURNER';
+
+INSERT INTO favorite_food (`PERSON_ID`, `FOOD`) VALUES (1, 'PIZZA');
+
+INSERT INTO
+    favorite_food (`PERSON_ID`, `FOOD`)
+VALUES (1, 'COOKIES');
+
+INSERT INTO favorite_food (`PERSON_ID`, `FOOD`) VALUES (1, 'NACHOS');
+
+SELECT FOOD FROM favorite_food WHERE `PERSON_ID`=1 ORDER BY `FOOD`;
+
+INSERT INTO
+    person (
+        `PERSON_ID`,
+        `FNAME`,
+        `LNAME`,
+        `EYE_COLOR`,
+        `BIRTH_DATE`,
+        `CITY`,
+        `STREET`,
+        `STATE`,
+        `COUNTRY`,
+        `POSTAL_CODE`
+    )
+VALUES (
+        null,
+        'Susan',
+        'Smith',
+        'BL',
+        '1975-11-02',
+        '23 Maple st.',
+        'Arlington',
+        'VA',
+        'USA',
+        '20220'
+    );
+
+SELECT * FROM person;
+
+UPDATE PERSON
+SET
+    STREET = '1225 TREMONT ST.',
+    `CITY` = 'BOSTON',
+    STATE = 'MA',
+    COUNTRY = 'USA',
+    `POSTAL_CODE` = '02138'
+WHERE `PERSON_ID` = 1;
+
+UPDATE PERSON
+SET
+    STREET = '1225 TREMONT ST.',
+    `CITY` = 'BOSTON',
+    STATE = 'MA',
+    COUNTRY = 'USA',
+    `POSTAL_CODE` = '02138'
+WHERE `PERSON_ID` < 10;
+
+DELETE FROM person WHERE `PERSON_ID`=2;
+
+SHOW TABLES;

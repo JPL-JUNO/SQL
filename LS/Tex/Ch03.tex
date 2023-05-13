@@ -1,0 +1,68 @@
+\chapter{Query Primer\label{Ch03}}
+\section{Query Clauses}
+Several components or clauses make up the select statement. While only one of them is mandatory when using MySQL (the select clause), you will usually include at least two or three of the six available clauses. \autoref{tbl3-1} shows the different clauses and their purposes.
+\begin{table}
+    \centering
+    \caption{Query clauses Clause name Purpose}
+    \label{tbl3-1}
+    \begin{tabular}{ll}
+        \hline
+        Clause name & Purpose                                                                               \\
+        \hline
+        select      & Determines which columns to include in the query's result set                         \\
+        from        & Identifies the tables from which to retrieve data and how the tables should be joined \\
+        where       & Filters out unwanted data                                                             \\
+        group by    & Used to group rows together by common column values                                   \\
+        having      & Filters out unwanted groups                                                           \\
+        order by    & Sorts the rows of the final result set by one or more columns                         \\
+        \hline
+    \end{tabular}
+\end{table}
+
+\section{The select Clause}
+The job of the select clause is as follows:
+\begin{tcolorbox}
+    The select clause determines which of all possible columns should be included in the query's result set.
+\end{tcolorbox}
+
+If you were limited to including only columns from the table or tables named in the from clause, things would be rather dull. However, you can spice things up in your select clause by including things such as:
+
+\begin{itemize}
+    \item Literals, such as numbers or strings
+    \item Expressions, such as transaction.amount * -1
+    \item Built-in function calls, such as ROUND(transaction.amount, 2)
+    \item User-defined function calls
+\end{itemize}
+
+If you only need to execute a built-in function or evaluate a simple expression, you can skip the from clause entirely.
+
+\subsubsection*{Removing Duplicates}
+\begin{tcolorbox}
+    Keep in mind that generating a distinct set of results requires the data to be sorted, which can be time consuming for large result sets. Don't fall into the trap of using distinct just to be sure there are no duplicates; instead, take the time to understand the data you are working with so that you will know whether duplicates are possible.
+\end{tcolorbox}
+\section{The from Clause}
+\subsection{Tables}
+Four different types of tables meet this relaxed definition:
+\begin{itemize}
+    \item  Permanent tables (i.e., created using the create table statement)
+    \item  Derived tables (i.e., rows returned by a subquery and held in memory)
+    \item  Temporary tables (i.e., volatile data held in memory)
+    \item  Virtual tables (i.e., created using the create view statement)
+\end{itemize}
+\subsubsection*{Temporary tables}
+These tables look just like permanent tables, but any data inserted into a temporary table will disappear at some point (generally at the end of a transaction or when your database session is closed).
+
+\subsubsection*{Views}
+A view is a query that is stored in the data dictionary. It looks and acts like a table, but there is no data associated with a view (virtual table). When you issue a query against a view, your query is merged with the view definition to create a final query to be executed.
+
+\section{The where Clause}
+\begin{tcolorbox}
+    The where clause is the mechanism for filtering out unwanted rows from your result set.
+\end{tcolorbox}
+
+\section{The order by Clause}
+\begin{tcolorbox}
+    The order by clause is the mechanism for sorting your result set using either raw column data or expressions based on column data.
+\end{tcolorbox}
+\subsection{Sorting via Numeric Placeholders}
+If you are sorting using the columns in your select clause, you can opt to reference the columns by their position in the select clause rather than by name. This can be especially helpful if you are sorting on an expression.

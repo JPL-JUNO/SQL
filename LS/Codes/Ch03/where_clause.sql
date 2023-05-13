@@ -1,0 +1,1 @@
+SELECT TITLE FROM film WHERE RATING='G' AND rental_duration >= 7;
