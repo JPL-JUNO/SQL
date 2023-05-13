@@ -239,8 +239,103 @@ SQL 语言的基础之一是集合论。但是，很长一段时间内，由于 
 \end{itemize}
 优先级高的真值会决定计算结果。例如 true AND unknown，因为unknown 的优先级更高，所以结果是 unknown。而 true OR unknown 的话，因为 true 优先级更高，所以结果是 true。记住这个顺序后就能更方便地进行三值逻辑运算了。特别需要记住的是，当 AND 运算中包含 unknown 时，结果肯定不会是 true（反之，如果 AND 运算结果为 true，则参与运算的双方必须都为 true）。
 
+\begin{table}
+
+    \centering
+    \begin{minipage}{.3\textwidth}
+        \centering
+        \begin{tabular}{cc}
+            \hline
+            x & NOT X \\
+            \hline
+            t & f     \\
+            u & u     \\
+            f & t     \\
+            \hline
+        \end{tabular}
+    \end{minipage}\quad
+    \begin{minipage}{.3\textwidth}
+        \centering
+        \begin{tabular}{cccc}
+            \hline
+            AND & t & u & f \\
+            \hline
+            t   & t & u & f \\
+            u   & u & u & f \\
+            f   & f & f & f \\
+            \hline
+        \end{tabular}
+    \end{minipage}\quad
+    \begin{minipage}{.3\textwidth}
+        \centering
+        \begin{tabular}{cccc}
+            \hline
+            OR & t & u & f \\
+            \hline
+            t  & t & t & t \\
+            u  & t & u & u \\
+            f  & t & u & f \\
+            \hline
+        \end{tabular}
+    \end{minipage}
+\end{table}
 \subsection{实践篇}
 \subsubsection*{比较谓词和NULL(1)：排中律不成立}
 把命题和它的否命题通过“或者”连接而成的命题全都是真命题”这个命题在二值逻辑中被称为排中律（Law of Excluded Middle）。顾名思义，排中律就是指不认可中间状态，对命题真伪的判定黑白分明，是古典逻辑学的重要原理。“是否承认这一原理”被认为是古典逻辑学和非古典逻辑学的分界线。遗憾的是，在 SQL 的世界里，排中律是不成立的。
 \subsubsection*{比较谓词和NULL(2)：CASE表达式和NULL}
 CASE表达式的判断方法和WHERE子句一样，只认可真值为TRUE的条件。
+
+\subsubsection*{限定谓词和NULL}
+SQL 里有 ALL 和 ANY 两个限定谓词。ALL 可以和比较谓词一起使用，用来表达“与所有的 XX 都相等”，或“比所有的 XX 都大”的意思。
+
+具体的分析步骤如下所示：
+\begin{enumerate}
+    \item \textsf{SELECT * FROM Class\_A WHERE age $<$ ALL ( 22, 23, NULL );}
+    \item \textsf{SELECT * FROM Class\_A WHERE (age $<$ 22) AND (age $<$ 23) AND (age $<$ NULL);}
+    \item \textsf{SELECT * FROM Class\_A WHERE (age $<$ 22) AND (age $<$ 23) AND unknown;}
+    \item \textsf{SELECT * FROM Class\_A WHERE false 或 unknown;}
+\end{enumerate}
+\subsubsection*{限定谓词和极值函数不是等价的}
+有一种情况：谓词（或者函数）的输入是空集的情况，将导致ALL和极值函数不同。
+
+极值函数在输入为空表（空集）时会返回 NULL。
+
+\subsubsection*{聚合函数和NULL}
+输入为空表时返回 NULL 的不只是极值函数，COUNT 以外的聚合函数也是如此。
+
+这种情况的解决方法只有两种：要么把 NULL 改写成具体值，要么闭上眼睛接受NULL。但是如果某列有 NOT NULL 约束，而我们需要往其中插入平均值或汇总值，那么就只能选择将 NULL 改写成具体值了。
+\subsection{本节小结}
+本节要点：
+\begin{enumerate}
+    \item NULL 不是值。
+    \item 因为 NULL 不是值，所以不能对其使用谓词。
+    \item 对 NULL 使用谓词后的结果是 unknown。
+    \item unknown 参与到逻辑运算时，SQL 的运行会和预想的不一样。
+    \item 按步骤追踪 SQL 的执行过程能有效应对 4 中的情况。
+\end{enumerate}
+
+\section{EXISTS谓词的用法}
+\subsection{理论篇}
+SQL 的保留字中，有很多都被归为谓词一类。例如，“$=$、$<$、$>$”等比较谓词，以及 BETWEEN、LIKE、IN、IS NULL 等。
+
+际上，谓词是一种特殊的函数，返回值是真值。前面提到的每个谓词，返回值都是 true、false 或者 unknown（一般的谓词逻辑里没有unknown，但是 SQL 采用的是三值逻辑，因此具有三种真值）。
+
+在关系数据库里，表中的一行数据可以看作是一个命题。表常常被认为是行的集合，但从谓词逻辑的观
+点看，也可以认为是命题的集合（陈述句的集合）。C.J. Date 曾经这样
+调侃过：数据库这种叫法有点名不副实，它存储的与其说是数据，还不如
+说是命题\footnote{“ 确 实，1969 年 Codd 在开始思考关系模型时曾强调过，数据库（和名字无关）实际上并非是数据的集合，而是事实（即真命题）的集合。”}。
+\subsubsection*{实体的阶层}
+同样是谓词，但是与 =、BETWEEN 等相比，EXISTS 的用法还是大不相同的。概括来说，区别在于“谓词的参数可以取什么值”。
+
+
+\textbf{参数是行数据的集合}。之所以这么说，是因为无论子查询中选择什么样的列，对于 EXISTS 来说都是一样的。在 EXISTS 的子查询里，SELECT 子句的列表可以有下面这三种写法。
+\begin{enumerate}
+    \item 通配符：SELECT *
+    \item 常量：SELECT ‘这里的内容任意’
+    \item 列名：SELECT col
+\end{enumerate}
+
+\figures{fig1-5-1}{EXISTS的动作}
+
+阶（order）是用来区分集合或谓词的阶数的概念。EXISTS 因接受的参数是集合这样的一阶实体而被称为二阶谓词，但是谓词也是函数的一种，因此我们也可以说EXISTS 是高阶函数。
+

@@ -1,0 +1,44 @@
+SELECT DISTINCT `PERSON` FROM meetings;
+
+SELECT
+    DISTINCT M1.MEETING,
+    M2.PERSON
+FROM meetings AS M1
+    CROSS JOIN meetings AS M2;
+
+SELECT
+    DISTINCT M1.MEETING,
+    M2.PERSON
+FROM meetings AS M1
+    CROSS JOIN meetings AS M2
+WHERE NOT EXISTS (
+        SELECT *
+        FROM MEETINGS AS M3
+        WHERE
+            M1.`MEETING` = M3.MEETING
+            AND M2.`PERSON` = M3.PERSON
+    );
+
+-- MySQL不能执行
+
+/*
+ SELECT
+ DISTINCT M1.MEETING,
+ M2.PERSON
+ FROM
+ meetings AS M1,
+ MEETINGS AS M2
+ EXCEPT
+ SELECT MEETING, PERSON
+ FROM MEETINGS;
+ */
+
+SELECT DISTINCT STUDENT_ID
+FROM testscores AS TS1
+WHERE NOT EXISTS(
+        SELECT *
+        FROM testscores AS TS2
+        WHERE
+            TS1.`STUDENT_ID` = TS2.`STUDENT_ID`
+            AND TS2.`SCORE` < 50
+    );
