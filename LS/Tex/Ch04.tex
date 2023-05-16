@@ -1,0 +1,45 @@
+\chapter{Filtering\label{Ch04}}
+\section{Range Conditions}
+\subsection*{The between operator}
+When you have both an upper and lower limit for your range, you may choose to use a single condition that utilizes the between operator rather than using two separate conditions.
+
+\subsection*{String ranges}
+To work with string ranges, you need to know the order of the characters within your character set (the order in which the characters within a character set are sorted is called a collation(排序规则)).
+\section{Membership Conditions}
+In some cases, you will not be restricting an expression to a single value or range of values but rather to a finite set of values.
+
+\subsection*{Using subqueries}
+Along with writing your own set of expressions, such as (`G',`PG'), you can use a subquery to generate a set for you on the fly.
+\subsection*{Using not in}
+Sometimes you want to see whether a particular expression exists within a set of expressions, and sometimes you want to see whether the expression does not exist within the set.
+\section{Matching Conditions}
+\subsection*{Using wildcards}
+\begin{table}
+    \centering
+    \caption{Wildcard characters}
+    \begin{tabular}{ll}
+        \hline
+        Wildcard character & Matches                                \\
+        \hline
+        \_                 & Exactly one character                  \\
+        \%                 & Any number of characters (including 0) \\
+        \hline
+    \end{tabular}
+\end{table}
+When building conditions that utilize search expressions, you use the like operator.
+
+\begin{table}
+    \centering
+    \caption{Sample search expressions}
+    \begin{tabular}{ll}
+        \hline
+        Search expression    & Interpretation                                                       \\
+        \hline
+        F\%                  & Strings beginning with F                                             \\
+        \%t                  & Strings ending with t                                                \\
+        \%bas\%              & Strings containing the substring 'bas'                               \\
+        \_\_t\_              & Four-character strings with a t in the third position                \\
+        \_\_\_-\_\_-\_\_\_\_ & 11-character strings with dashes in the fourth and seventh positions \\
+        \hline
+    \end{tabular}
+\end{table}
