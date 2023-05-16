@@ -43,3 +43,19 @@ When building conditions that utilize search expressions, you use the like opera
         \hline
     \end{tabular}
 \end{table}
+\section{Null: That Four-Letter Word}
+null is a bit slippery, however, as there are various flavors of null:
+
+\textit{Not applicable}: Such as the employee ID column for a transaction that took place at an ATM machine
+
+\textit{Value not yet known}: Such as when the federal ID is not known at the time a customer row is created
+
+\textit{Value undefined}: Such as when an account is created for a product that has not yet been added to the database
+
+When working with null, you should remember:
+\begin{itemize}
+    \item An expression can be null, but it can never equal null.
+    \item Two nulls are never equal to each other.
+\end{itemize}
+
+When working with a database that you are not familiar with, it is a good idea to find out which columns in a table allow nulls so that you can take appropriate measures with your filter conditions to keep data from slipping through the cracks.
