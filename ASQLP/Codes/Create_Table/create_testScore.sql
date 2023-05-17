@@ -1,3 +1,7 @@
+-- Active: 1683725252949@@127.0.0.1@3306@asqlp
+
+DROP TABLE IF EXISTS testscores;
+
 CREATE TABLE
     TESTSCORES(
         STUDENT_ID INTEGER,
@@ -23,3 +27,5 @@ INSERT INTO TestScores VALUES(300, '语文',90);
 INSERT INTO TestScores VALUES(300, '社会',55);
 
 INSERT INTO TestScores VALUES(400, '数学',80);
+
+SELECT * FROM testscores;

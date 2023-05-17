@@ -1,0 +1,35 @@
+DROP TABLE IF EXISTS PROJECTS;
+
+CREATE TABLE
+    IF NOT EXISTS PROJECTS(
+        PROJECT_ID VARCHAR(32),
+        STEP_NBR INTEGER,
+        STATUS VARCHAR(32),
+        PRIMARY KEY(PROJECT_ID, STEP_NBR)
+    );
+
+INSERT INTO Projects VALUES('AA100', 0, '完成');
+
+INSERT INTO Projects VALUES('AA100', 1, '等待');
+
+INSERT INTO Projects VALUES('AA100', 2, '等待');
+
+INSERT INTO Projects VALUES('B200', 0, '等待');
+
+INSERT INTO Projects VALUES('B200', 1, '等待');
+
+INSERT INTO Projects VALUES('CS300', 0, '完成');
+
+INSERT INTO Projects VALUES('CS300', 1, '完成');
+
+INSERT INTO Projects VALUES('CS300', 2, '等待');
+
+INSERT INTO Projects VALUES('CS300', 3, '等待');
+
+INSERT INTO Projects VALUES('DY400', 0, '完成');
+
+INSERT INTO Projects VALUES('DY400', 1, '完成');
+
+INSERT INTO Projects VALUES('DY400', 2, '完成');
+
+SELECT * FROM projects;
