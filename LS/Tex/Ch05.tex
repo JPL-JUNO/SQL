@@ -1,0 +1,14 @@
+\chapter{Querying Multiple Tables\label{Ch05}}
+\section{Inner Joins}
+If you do not specify the type of join, then the server will do an inner join by default.
+
+If the names of the columns used to join the two tables are identical, you can use the using subclause instead of the on subclause.
+\section{Joining Three or More Tables}
+
+\begin{tcolorbox}[title=Does Join Order Matter?]
+    Keep in mind that SQL is a nonprocedural language, meaning that you describe what you want to retrieve and which database objects need to be involved, but it is up to the database server to determine how best to execute your query.
+
+    If, however, you believe that the tables in your query should always be joined in a particular order, you can place the tables in the desired order and then specify the keyword straight\_join in MySQL, request the force order option in SQL Server, or use either the ordered or the leading optimizer hint in Oracle Database.
+\end{tcolorbox}
+
+\subsection{Using Subqueries as Tables}
