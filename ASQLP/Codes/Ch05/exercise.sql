@@ -1,0 +1,185 @@
+-- Active: 1683725252949@@127.0.0.1@3306@asqlp
+
+/*
+ @Description: 练习题
+ @Author(s): Stephen CUI
+ @LastEditor(s): Stephen CUI
+ @CreatedTime: 2023-05-22 21:30:23
+ */
+
+DROP TABLE IF EXISTS ARRAYTBL2;
+
+CREATE TABLE
+    IF NOT EXISTS ARRAYTBL2(
+        KEY_VAL CHAR(1) NOT NULL,
+        I INTEGER NOT NULL,
+        VAL INTEGER,
+        PRIMARY KEY (KEY_VAL, I)
+    );
+
+INSERT INTO ArrayTbl2 VALUES('A', 1, NULL);
+
+INSERT INTO ArrayTbl2 VALUES('A', 2, NULL);
+
+INSERT INTO ArrayTbl2 VALUES('A', 3, NULL);
+
+INSERT INTO ArrayTbl2 VALUES('A', 4, NULL);
+
+INSERT INTO ArrayTbl2 VALUES('A', 5, NULL);
+
+INSERT INTO ArrayTbl2 VALUES('A', 6, NULL);
+
+INSERT INTO ArrayTbl2 VALUES('A', 7, NULL);
+
+INSERT INTO ArrayTbl2 VALUES('A', 8, NULL);
+
+INSERT INTO ArrayTbl2 VALUES('A', 9, NULL);
+
+INSERT INTO ArrayTbl2 VALUES('A',10, NULL);
+
+INSERT INTO ArrayTbl2 VALUES('B', 1, 3);
+
+INSERT INTO ArrayTbl2 VALUES('B', 2, NULL);
+
+INSERT INTO ArrayTbl2 VALUES('B', 3, NULL);
+
+INSERT INTO ArrayTbl2 VALUES('B', 4, NULL);
+
+INSERT INTO ArrayTbl2 VALUES('B', 5, NULL);
+
+INSERT INTO ArrayTbl2 VALUES('B', 6, NULL);
+
+INSERT INTO ArrayTbl2 VALUES('B', 7, NULL);
+
+INSERT INTO ArrayTbl2 VALUES('B', 8, NULL);
+
+INSERT INTO ArrayTbl2 VALUES('B', 9, NULL);
+
+INSERT INTO ArrayTbl2 VALUES('B',10, NULL);
+
+INSERT INTO ArrayTbl2 VALUES('C', 1, 1);
+
+INSERT INTO ArrayTbl2 VALUES('C', 2, 1);
+
+INSERT INTO ArrayTbl2 VALUES('C', 3, 1);
+
+INSERT INTO ArrayTbl2 VALUES('C', 4, 1);
+
+INSERT INTO ArrayTbl2 VALUES('C', 5, 1);
+
+INSERT INTO ArrayTbl2 VALUES('C', 6, 1);
+
+INSERT INTO ArrayTbl2 VALUES('C', 7, 1);
+
+INSERT INTO ArrayTbl2 VALUES('C', 8, 1);
+
+INSERT INTO ArrayTbl2 VALUES('C', 9, 1);
+
+INSERT INTO ArrayTbl2 VALUES('C',10, 1);
+
+SELECT * FROM arraytbl2;
+
+SELECT DISTINCT `KEY_VAL`
+FROM arraytbl2 AS T1
+WHERE NOT EXISTS (
+        SELECT *
+        FROM arraytbl2 AS T2
+        WHERE
+            T2.`KEY_VAL` = T1.`KEY_VAL`
+            AND (
+                T1.`VAL` IS NULL
+                OR T2.`VAL` <> 1
+            )
+    );
+
+-- 使用ALL谓词
+
+SELECT DISTINCT `KEY_VAL`
+FROM arraytbl2 as T1
+WHERE 1 = ALL (
+        SELECT VAL
+        FROM arraytbl2 AS T2
+        WHERE
+            T1.KEY_VAL = T2.KEY_VAL
+    );
+
+-- 使用HAVING子句
+
+SELECT KEY_VAL
+FROM arraytbl2 AS T1
+GROUP BY `KEY_VAL`
+HAVING
+    SUM(
+        CASE VAL
+            WHEN 1 THEN 1
+            ELSE 0
+        END
+    ) = COUNT(`KEY_VAL`);
+
+-- 在HAVING子句中使用极值函数
+
+SELECT `KEY_VAL` FROM arraytbl2 GROUP BY `KEY_VAL` HAVING MAX(VAL)=1;
+
+SELECT *
+FROM projects AS P1
+WHERE 'Y' = ALL(
+        SELECT
+            CASE
+                WHEN `STEP_NBR` <= 1
+                AND `STATUS` = '完成' THEN 'Y'
+                WHEN `STEP_NBR` > 1
+                AND `STATUS` = '等待' THEN 'Y'
+                ELSE 'N'
+            END
+        FROM projects AS P2
+        WHERE
+            P1.`PROJECT_ID` = P2.`PROJECT_ID`
+    );
+
+DROP TABLE IF EXISTS DIGITS;
+
+CREATE TABLE IF NOT EXISTS DIGITS (DIGITS INTEGER PRIMARY KEY);
+
+INSERT INTO Digits VALUES (0);
+
+INSERT INTO Digits VALUES (1);
+
+INSERT INTO Digits VALUES (2);
+
+INSERT INTO Digits VALUES (3);
+
+INSERT INTO Digits VALUES (4);
+
+INSERT INTO Digits VALUES (5);
+
+INSERT INTO Digits VALUES (6);
+
+INSERT INTO Digits VALUES (7);
+
+INSERT INTO Digits VALUES (8);
+
+INSERT INTO Digits VALUES (9);
+
+DROP TABLE IF EXISTS NUMBERS;
+
+CREATE TABLE
+    IF NOT EXISTS NUMBERS AS(
+        SELECT
+            D1.DIGITS + D2.DIGITS * 10 AS NUM
+        FROM DIGITS AS D1
+            CROSS JOIN DIGITS AS D2
+        WHERE
+            D1.DIGITS + D2.DIGITS * 10 BETWEEN 1 AND 100
+    );
+
+SELECT DISTINCT NUM AS PRIME
+FROM numbers AS DIVIDEND
+WHERE NUM > 1 AND NOT EXISTS(
+        SELECT *
+        FROM numbers AS DIVISOR
+        WHERE
+            DIVISOR.NUM <= DIVIDEND.NUM / 2
+            AND DIVISOR.NUM <> 1
+            AND MOD(DIVIDEND.NUM, DIVISOR.NUM) = 0
+    )
+ORDER BY 1;
