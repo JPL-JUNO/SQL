@@ -3,3 +3,48 @@ Although you can interact with the data in a database one row at a time, relatio
 \section{Set Theory Primer}
 \figures{fig6-1}{The union operation}
 The shaded area in \autoref{fig6-1} represents the union of sets A and B, which is the combination of the two sets (with any overlapping regions included only once).
+
+\section{Set Theory in Practice}
+When performing set operations on two data sets, the following guidelines must apply:
+\begin{itemize}
+    \item Both data sets must have the same number of columns.
+    \item The data types of each column across the two data sets must be the same (or the server must be able to convert one to the other).
+\end{itemize}
+\section{Set Operators}
+The SQL language includes three set operators that allow you to perform each of the various set operations described earlier in the chapter. Additionally, each set operator has two flavors, one that includes duplicates and another that removes duplicates (but not necessarily all of the duplicates).
+
+\subsection{The union Operator}
+The union and union all operators allow you to combine multiple data sets. The difference between the two is that union sorts the combined set and removes duplicates, whereas union all does not. With union all, the number of rows in the final data set will always equal the sum of the number of rows in the sets being combined.
+
+If you would like your combined table to exclude duplicate rows, you need to use the union operator instead of union all.
+
+\subsection{The intersect Operator}
+The ANSI SQL specification includes the intersect operator for performing intersections. Unfortunately, version 8.0 of MySQL does not implement the intersect operator.
+
+Along with the intersect operator, which removes any duplicate rows found in the overlapping region, the ANSI SQL specification calls for an intersect all operator, which does not remove duplicates. The only database server that currently implements the intersect all operator is IBM’s DB2 Universal Server.
+
+\subsection{The except Operator}
+The ANSI SQL specification includes the except operator for performing the except operation. Once again, unfortunately, version 8.0 of MySQL does not implement the except operator.
+
+There is also an except all operator specified in the ANSI SQL specification, but once again, only IBM’s DB2 Universal Server has implemented the except all operator.
+
+The except all operator is a bit tricky, the difference between the two operations is that except removes all occurrences of duplicate data from set A, whereas except all removes only one occurrence of duplicate data from set A for every occurrence in set B.
+
+\section{Set Operation Rules}
+The following sections outline some rules that you must follow when working with compound queries.
+
+\subsection{Sorting Compound Query Results}
+If you want the results of your compound query to be sorted, you can add an order by clause after the last query. When specifying column names in the order by clause, you will need to choose from the column names in the first query of the compound query. Frequently, the column names are the same for both queries in a compound query, but this does not need to be the case.
+
+\subsection{Set Operation Precedence}
+If your compound query contains more than two queries using different set operators, you need to think about the order in which to place the queries in your compound statement to achieve the desired results.
+
+In general, compound queries containing three or more queries are evaluated in order from top to bottom, but with the following caveats:
+
+\begin{itemize}
+    \item  The ANSI SQL specification calls for the intersect operator to have precedence over the other set operators.
+    \item You may dictate the order in which queries are combined by enclosing multiple queries in parentheses.
+\end{itemize}
+
+MySQL does not yet allow parentheses in compound queries, but if you are using a different database server, you can wrap adjoining queries in parentheses to override the default top-to-bottom processing of compound queries.
+
