@@ -1,0 +1,9 @@
+\chapter{Data Generation, Manipulation, and Conversion\label{Ch07}}
+
+\section{Working with String Data}
+When working with string data, you will be using one of the following character data types:
+\paragraph{CHAR} Holds fixed-length, blank-padded strings. MySQL allows CHAR values up to 255 characters in length, Oracle Database permits up to 2,000 characters, and SQL Server allows up to 8,000 characters.
+
+\paragraph{varchar} Holds variable-length strings. MySQL permits up to 65,535 characters in a var char column, Oracle Database (via the varchar2 type) allows up to 4,000 characters, and SQL Server allows up to 8,000 characters.
+
+\paragraph{text (MySQL and SQL Server) or clob (Oracle Database)} Holds very large variable-length strings (generally referred to as documents in this context). MySQL has multiple text types (tinytext, text, mediumtext, and longtext) for documents up to 4 GB in size. SQL Server has a single text type for documents up to 2 GB in size, and Oracle Database includes the clob data type, which can hold documents up to a whopping 128 TB. SQL Server 2005 also includes the varchar(max) data type and recommends its use instead of the text type, which will be removed from the server in some future release.
