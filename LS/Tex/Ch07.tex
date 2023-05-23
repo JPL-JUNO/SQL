@@ -87,3 +87,28 @@ The replace() function will replace every instance of the search string with the
 SQL Server also includes a replace() function with the same functionality as Oracle's, but SQL Server also includes a function called stuff() with similar functionality to MySQL's insert() function.
 
 Along with inserting characters into a string, you may have a need to extract a substring from a string. For this purpose, all three servers include the substring() function (although Oracle Database's version is called substr()), which extracts a specified number of characters starting at a specified position.
+
+\section{Working with Numeric Data}
+The main concern when storing numeric data is that numbers might be rounded if they are larger than the specified size for a numeric column. For example, the number 9.96 will be rounded to 10.0 if stored in a column defined as float(3,1).
+
+\subsection{Performing Arithmetic Functions}
+The modulo operator, which calculates the remainder when one number is divided into another number, is implemented in MySQL and Oracle Database via the mod() function.
+
+While the mod() function is typically used with integer arguments, with MySQL you can also use real numbers.
+
+\begin{tcolorbox}
+    SQL Server does not have a mod() function. Instead, the operator \% is used for finding remainders. The expression 10 \% 4 will therefore yield the value 2.
+\end{tcolorbox}
+
+Another numeric function that takes two numeric arguments is the pow() function (or power() if you are using Oracle Database or SQL Server), which returns one number raised to the power of a second number.
+
+\subsection{Controlling Number Precision}
+When working with floating-point numbers, you may not always want to interact with or display a number with its full precision. Four functions are useful when limiting the precision of floating-point numbers: ceil(), floor(), round(), and truncate(). All three servers include these functions, although Oracle Database includes trunc() instead of truncate(), and SQL Server includes ceiling() instead of ceil().
+
+You can use the round() function to round up or down from the midpoint between two integers. Using round(), any number whose decimal portion is halfway or more between two integers will be rounded up, whereas the number will be rounded down if the decimal portion is anything less than halfway between the two integers.
+
+The round() function allows an optional second argument to specify how many digits to the right of the decimal place to round to.
+
+Like the round() function, the truncate() function allows an optional second argument to specify the number of digits to the right of the decimal, but truncate() simply discards the unwanted digits without rounding.
+
+Both truncate() and round() also allow a negative value for the second argument, meaning that numbers to the left of the decimal place are truncated or rounded.比如说用在整数购买中
