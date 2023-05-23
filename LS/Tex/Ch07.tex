@@ -2,8 +2,88 @@
 
 \section{Working with String Data}
 When working with string data, you will be using one of the following character data types:
-\paragraph{CHAR} Holds fixed-length, blank-padded strings. MySQL allows CHAR values up to 255 characters in length, Oracle Database permits up to 2,000 characters, and SQL Server allows up to 8,000 characters.
+\paragraph{CHAR}~Holds fixed-length, blank-padded strings. MySQL allows CHAR values up to 255 characters in length, Oracle Database permits up to 2,000 characters, and SQL Server allows up to 8,000 characters.
 
-\paragraph{varchar} Holds variable-length strings. MySQL permits up to 65,535 characters in a var char column, Oracle Database (via the varchar2 type) allows up to 4,000 characters, and SQL Server allows up to 8,000 characters.
+\paragraph{varchar}~Holds variable-length strings. MySQL permits up to 65,535 characters in a var char column, Oracle Database (via the varchar2 type) allows up to 4,000 characters, and SQL Server allows up to 8,000 characters.
 
-\paragraph{text (MySQL and SQL Server) or clob (Oracle Database)} Holds very large variable-length strings (generally referred to as documents in this context). MySQL has multiple text types (tinytext, text, mediumtext, and longtext) for documents up to 4 GB in size. SQL Server has a single text type for documents up to 2 GB in size, and Oracle Database includes the clob data type, which can hold documents up to a whopping 128 TB. SQL Server 2005 also includes the varchar(max) data type and recommends its use instead of the text type, which will be removed from the server in some future release.
+\paragraph{text (MySQL and SQL Server) or clob (Oracle Database)}~Holds very large variable-length strings (generally referred to as documents in this context). MySQL has multiple text types (tinytext, text, mediumtext, and longtext) for documents up to 4 GB in size. SQL Server has a single text type for documents up to 2 GB in size, and Oracle Database includes the clob data type, which can hold documents up to a whopping 128 TB. SQL Server 2005 also includes the varchar(max) data type and recommends its use instead of the text type, which will be removed from the server in some future release.
+
+\subsection{String Generation}
+The simplest way to populate a character column is to enclose a string in quotes.
+
+When inserting string data into a table, remember that if the length of the string exceeds the maximum size for the character column (either the designated maximum or the maximum allowed for the data type), the server will throw an exception. Although this is the default behavior for all three servers, you can configure MySQL and SQL Server to silently truncate the string instead of throwing an exception.
+
+Since MySQL 6.0, the default behavior is now ``strict'' mode, which means that exceptions are thrown when problems arise, whereas in older versions of the server the string would have been truncated and a warning issued. If you would rather have the engine truncate the string and issue a warning instead of raising an exception, you can opt to be in ANSI mode.
+
+\subsubsection*{Including single quotes}
+Since strings are demarcated by single quotes, you will need to be alert for strings that include single quotes or apostrophes.
+
+To make the server ignore the apostrophe in the word doesn't, you will need to add an escape to the string so that the server treats the apostrophe like any other character in the string. All three servers allow you to escape a single quote by adding another single quote directly before.
+
+If you retrieve a string for use in a screen or report field, you don't need to do anything special to handle embedded quotes.
+
+However, if you are retrieving the string to add to a file that another program will read, you may want to include the escape as part of the retrieved string. If you are using MySQL, you can use the built-in function quote(), which places quotes around the entire string and adds escapes to any single quotes/apostrophes within the string.
+
+When retrieving data for data export, you may want to use the quote() function for
+all non-system-generated character columns, such as a customer\_notes column.
+
+\subsubsection*{Including special characters}
+When working with the French and German languages, for example, you might need to include accented characters such as é and ö. The SQL Server and MySQL servers include the built-in function char() so that you can build strings from any of the 255 characters in the ASCII character set (Oracle Database users can use the chr() function).
+
+You can use the concat() function to concatenate individual strings, some of which you can type while others you can generate via the char() function.
+
+\begin{tcolorbox}
+    Oracle Database users can use the concatenation operator ($||$) instead of the concat() function.
+
+    SQL Server does not include a concat() function, so you will need to use the concatenation operator ($+$),
+\end{tcolorbox}
+
+If you have a character and need to find its ASCII equivalent, you can use the ascii() function, which takes the leftmost character in the string and returns a number.
+
+\subsection{String Manipulation}
+
+\subsubsection*{String functions that return numbers}
+Of the string functions that return numbers, one of the most commonly used is the length() function, which returns the number of characters in the string (SQL Server users will need to use the len() function).
+
+The MySQL server removes trailing spaces from char data when it is retrieved, however, so you will see the same results from all string functions regardless of the type of column in which the strings are stored.
+
+Along with finding the length of a string, you might want to find the location of a substring within a string. If the substring cannot be found, the position() function returns 0.
+
+\begin{tcolorbox}
+    For those of you who program in a language such as C or C++, where the first element of an array is at position 0, remember when working with databases that the first character in a string is at position 1. A return value of 0 from instr() indicates that the substring could not be found, not that the substring was found at the first position in the string.
+\end{tcolorbox}
+
+If you want to start your search at something other than the first character of your target string, you will need to use the locate() function, which is similar to the position() function except that it allows an optional third parameter, which is used to define the search's start position. The locate() function is also proprietary(专有的), whereas the position() function is part of the SQL:2003 standard.
+
+\begin{tcolorbox}
+    Oracle Database does not include the position() or locate() function, but it does include the instr() function, which mimics the position() function when provided with two arguments and mimics the locate() function when provided with three arguments. SQL Server also doesn't include a position() or locate() function, but it does include the charindx() function, which also accepts either two or three arguments similar to Oracle's instr() function.
+\end{tcolorbox}
+
+Another function that takes strings as arguments and returns numbers is the string
+comparison function strcmp(). strcmp(), which is implemented only by MySQL and
+has no analog in Oracle Database or SQL Server, takes two strings as arguments and
+returns one of the following:
+\begin{itemize}
+    \item -1 if the first string comes before the second string in sort order
+    \item 0 if the strings are identical
+    \item 1 if the first string comes after the second string in sort order
+\end{itemize}
+
+Along with the strcmp() function, MySQL also allows you to use the like and regexp operators to compare strings in the select clause. Such comparisons will yield 1 (for true) or 0 (for false). Therefore, these operators allow you to build expressions that return a number.
+
+\subsubsection*{String functions that return strings}
+Like all functions that return a string, you can use concat() to replace the data stored in a character column.
+
+Another common use for the concat() function is to build a string from individual pieces of data. The concat() function can handle any expression that returns a string and will even convert numbers and dates to string format.
+
+While concat() is useful for adding characters to the beginning or end of a string,you may also have a need to add or replace characters in the middle of a string. All three database servers provide functions for this purpose, but all of them are different.
+
+MySQL includes the insert() function, which takes four arguments: the original string, the position at which to start, the number of characters to replace, and the replacement string. Depending on the value of the third argument, the function may be used to either insert or replace characters in a string. With a value of 0 for the third argument, the replacement string is inserted, and any trailing characters are pushed to the right.
+
+Oracle Database does not provide a single function with the flexibility of MySQL's insert() function, but Oracle does provide the replace() function, which is useful for replacing one substring with another.
+
+The replace() function will replace every instance of the search string with the replacement string, so you need to be careful that you don't end up with more replacements than you anticipated.
+
+SQL Server also includes a replace() function with the same functionality as Oracle's, but SQL Server also includes a function called stuff() with similar functionality to MySQL's insert() function.
+
+Along with inserting characters into a string, you may have a need to extract a substring from a string. For this purpose, all three servers include the substring() function (although Oracle Database's version is called substr()), which extracts a specified number of characters starting at a specified position.
