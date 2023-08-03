@@ -8,7 +8,7 @@ psql -U postgres
 @REM 斜杠和小写的L，查看数据库列表
 \l
 @REM 进入数据库
-\cd databasename
+\c databasename
 @REM 可以查看数据库中的表列表
 \dt
 
