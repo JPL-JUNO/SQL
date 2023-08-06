@@ -1,0 +1,22 @@
+\chapter{Aggregate Functions for Data Analysis\label{Ch04}}
+\section{Aggregate Functions}
+\begin{table}
+    \centering
+    \begin{tabularx}{\textwidth}{lX}
+        \hline
+        Function                          & Explanation                                                                                                           \\
+        \hline
+        count(columnX)                    & Counts the number of rows in columnX that have a non-NULL value                                                       \\
+        count(*)                          & Counts the number of rows in the output table                                                                         \\
+        min(columnX)                      & Returns the minimum value in columnX. For text columns, it returns the value that would appear first alphabetically   \\
+        max(columnX)                      & Returns the maximum value in columnX                                                                                  \\
+        sum(columnX)                      & Returns the sum of all values in columnX                                                                              \\
+        avg(columnX)                      & Returns the average of all values in columnX                                                                          \\
+        stddev(columnX)                   & Returns the samples standard deviation of all values in columnX                                                       \\
+        var(columnX)                      & Returns the samples variance of all values in columnX                                                                 \\
+        regr\_slope(columnX, columnY)     & Returns the slope of linear regression for columnX as the response variable and columnY as the predictor variable     \\
+        regr\_intercept(columnX, columnY) & Returns the intercept of linear regression for columnX as the response variable and columnY as the predictor variable \\
+        corr(columnX, columnY)            & Calculates the Pearson correlation between columnX and columnY in the data                                            \\
+        \hline
+    \end{tabularx}
+\end{table}
