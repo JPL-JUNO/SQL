@@ -20,3 +20,18 @@
         \hline
     \end{tabularx}
 \end{table}
+
+\section{Aggregate Functions with the GROUP BY Clause}
+\subsection{Ordered Set Aggregates}
+\begin{table}
+    \centering
+    \begin{tabularx}{\textwidth}{ll}
+        \hline
+        Function           & Explanation                                                                                                                   \\
+        \hline
+        mode()             & Returns the value that appears most often. In the case of a tie, it returns the first value in order                          \\
+        percentile\_cont() & Returns a value corresponding to the specified fraction in the ordering, interpolating between adjacent input items if needed \\
+        percentile\_disc() & Returns the first input value whose position in the ordering equals or exceeds the specified fraction                         \\
+        \hline
+    \end{tabularx}
+\end{table}

@@ -65,3 +65,11 @@ FROM
 GROUP BY 
   {KEY}
 ```
+
+### Aggregate Functions with the GROUP BY Clause
+#### Ordered Set Aggregates
+```sql
+SELECT
+  {ordered_set_function} WITHIN GROUP (ORDER BY {order_column})
+FROM {table};
+```
