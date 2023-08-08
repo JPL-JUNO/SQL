@@ -107,3 +107,15 @@ END
 FROM
   {table1}
 ```
+
+## Window Functions for Data Analysis
+
+### Window Functions
+
+#### The Basics of Window Functions
+
+```sql
+SELECT {columns},
+{window_func} OVER (PARTITION BY {partition_key} ORDER BY {order_by})
+FROM table1;
+```
