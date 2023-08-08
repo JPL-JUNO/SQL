@@ -66,10 +66,44 @@ GROUP BY
   {KEY}
 ```
 
-### Aggregate Functions with the GROUP BY Clause
 #### Ordered Set Aggregates
+
 ```sql
 SELECT
   {ordered_set_function} WITHIN GROUP (ORDER BY {order_column})
 FROM {table};
+```
+
+### Aggregate Functions with the HAVING Clause
+
+```sql
+SELECT
+  {KEY},
+  {AGGFUNC (column1)}
+FROM 
+  {table1}
+GROUP BY
+  {KEY}
+HAVING
+  {OTHER_AGGFUNC (column2)_CONDITION}
+```
+
+### Using Aggregates to Clean Data and Examine Data Quality
+
+#### Finding Missing Values with GROUP BY
+
+```sql
+SELECT
+  SUM(
+CASE
+  WHEN 
+  {column1} IS NULL
+  OR
+  {column2} IN ({missing_values})
+  THEN 1
+  ELSE 0
+END
+  )::FLOAT/COUNT(*)
+FROM
+  {table1}
 ```
