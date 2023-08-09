@@ -4,3 +4,25 @@
 \figures{fig5-6}{Windows for customers using COUNT(*) ordered by the customer\_id window query}
 
 \autoref{fig5-6} the dataset is ordered using customer\_id, which happens to be the primary key. As such each row has a unique value and forms a value group. The first value group, without any row before it, forms its own window, which contains only the first row. The second value group's window will contain both itself and the row before it, which means the first and second row. Then the third value group's window will contain itself and the two rows before it, and so on and so forth. Every value group has its window. Once the windows are established, for every value group, the window function is calculated based on the window. In this example, this means COUNT is applied to every window. Thus, value group 1 (the first row) gets 1 as the result since its Window 1 contains one row, value group 2 (the second row) gets 2 since its Window 2 contains two rows, and so on and so forth. The results are applied to every row in this value group if the group contains multiple rows. Note that the window is used for calculation only. The results are assigned to rows in the value group, not assigned to the rows in the window.
+
+\section{Statistics with Window Functions}
+\begin{table}
+    \centering
+    \caption{Statistical window functions}
+    \begin{tabularx}{\textwidth}{lX}
+        \hline
+        Name        & Description                                                                                                               \\
+        \hline
+        row\_number & Number the current row within its partition starting from 1                                                               \\
+        dense\_rank & Rank the current row within its partition without gaps                                                                    \\
+        rank        & Rank the current row within its partition with gaps                                                                       \\
+        lag         & Return a vale evaluated at the row that is at a specified physical offset row before the current row within the partition \\
+        lead        & Return a value evaluated at the row that is offset rows after the current row within the partition                        \\
+        ntile       & Divide rows in partition as equally as possible and assign each row an integer starting from 1 to the argument value      \\
+        \hline
+    \end{tabularx}
+\end{table}
+
+\begin{tcolorbox}[title=Note]
+    One question regarding RANK() is the handling of tied values. RANK() is defined as the rank of rows, not the rank of values. For example, if the first two rows have a tie, the third row will get 3 from the RANK() function. DENSE\_RANK() could also be used just as easily as RANK(), but it is defined as the rank of values, not the rank of rows. In the example above, the value of DENSE\_RANK() for the third row will be 2 instead of 3, as the third row contains the 2nd value in the list of values.
+\end{tcolorbox}

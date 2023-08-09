@@ -119,3 +119,17 @@ SELECT {columns},
 {window_func} OVER (PARTITION BY {partition_key} ORDER BY {order_by})
 FROM table1;
 ```
+
+### Window Frame
+
+```sql
+SELECT
+  {columns},
+  {window_func} OVER (
+    PARTITION BY {partition_key}
+    ORDER BY {order_by}
+    {range or rows} BETWEEN {frame_start} AND {frame_end}
+  )
+FROM 
+  {table1};
+```
