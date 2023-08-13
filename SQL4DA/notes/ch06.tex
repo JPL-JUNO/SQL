@@ -1,0 +1,47 @@
+\chapter{导入与导出数据\label{ch06}}
+\section{The COPY Command}
+\subsection{Running the psql Command}
+The syntax of the psql command is as follows:
+\begin{verbatim}
+    psql -h <host> -p <port> -d <database> -U <username>
+\end{verbatim}
+In this command, you pass in flags that provide the information needed to make the database connection. In this case, you have the following:
+\begin{itemize}
+    \item  -h is the flag for the hostname. The string that comes after it (separated by a space) should be the hostname for your database, which can be an IP address, a domain name, or localhost if it is run on the local machine.
+    \item  -p is the flag for the database port. Usually, this is 5432 for PostgreSQL databases.
+    \item  -d is the flag for the database name. The string that comes after it should be the database name.
+    \item  -U is the flag for the username. It is succeeded by the username.
+\end{itemize}
+
+\subsection{Creating Temporary Views}
+\subsection{Configuring COPY and $\backslash$COPY}
+There are several options that you can use to configure the COPY and
+$\backslash$COPY commands:
+\begin{itemize}
+    \item FORMAT: format\_name can be used to specify the format. The options for format\_name are csv, text, or binary. Alternatively, you can simply specify CSV or BINARY without the FORMAT keyword, or not specify the format at all and let the output default to a text file format.
+    \item DELIMITER: delimiter\_character can be used to specify the delimiter character for CSV or text files (for example, for CSV files, or $|$ for pipe-separated files).
+    \item  NULL: null\_string can be used to specify how NULL values should be represented (for example, whether blanks represent NULL values or NULL if that is how missing values should be represented in the data).
+    \item  HEADER: This specifies that the header should be output.
+    \item  QUOTE: quote\_character can be used to specify how fields with special characters (for example, a comma in a text value within a CSV file) can be wrapped in quotes so that they are ignored by COPY.
+    \item  ESCAPE: escape\_character specifies the character that can be used to escape the following character.
+    \item  ENCODING: encoding\_name allows the specification of the encoding, which is particularly useful when you are dealing with foreign languages that contain special characters or user input.
+\end{itemize}
+\subsection{Using COPY and $\backslash$COPY to Bulk Upload Data to Your Database}
+The COPY and $\backslash$COPY commands are far more efficient at uploading data than an INSERT statement. There are a few reasons for this:
+\begin{itemize}
+    \item  When using COPY, there is only one push of a data block, which occurs after all the rows have been properly allocated.
+    \item  There is less communication between the database and the client, so there is less network latency.
+    \item  PostgreSQL includes optimizations for COPY that would not be available through INSERT.
+\end{itemize}
+
+\subsection{Using COPY and $\backslash$COPY to Bulk Upload Data to Your Database}
+\begin{tcolorbox}[title=Note]
+    For these maintenance tasks, you can use \verb|pg_dump| for a specific table and \verb|pg_dumpall| for an entire database or schema. These commands even let you save data in a compressed (tar) format, which saves space. Unfortunately, the output format from these commands is typically SQL, and it cannot be readily consumed outside of PostgreSQL. Therefore, it does not help you with importing or exporting data to and from other analytics tools, such as Python.
+\end{tcolorbox}
+
+\subsection{What is SQLAlchemy?}
+SQLAlchemy is a Python SQL toolkit and Object-Relational Mapper (ORM) that maps representations of objects to database tables. An ORM builds up mappings between SQL tables and programming language objects; in this case, Python objects. For example, in the following figure, there is a customer table in the database. The Python ORM will thus create a class called customer and keep the content in the object synchronized with the data in the table. For each row in the customer table, a customer object will be created inside the Python runtime. When there are changes (inserts, updates, and/or deletes), the ORM can initialize a sync and make the two sides consistent.
+\figures{fig6-21}{An ORM maps rows in a database to objects in memory}
+
+\subsection{Writing Data to the Database Using Python}
+If you have your data in a pandas DataFrame, you can write data back to the database using the pandas \verb|to_sql(…)| function, which requires two parameters: the name of the table to write to and the connection. Best of all, the \verb|to_sql(…)| function can also create the target table for you by inferring column types using a DataFrame's data types. 
