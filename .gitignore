@@ -7,4 +7,4 @@
 *.pygstyle
 _minted-Main
 *.listing
-
+*.pyc
