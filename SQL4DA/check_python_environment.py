@@ -48,19 +48,19 @@ def check_packages(d: dict) -> None:
         if way == '==':
             if actual_ver != suggest_ver:
                 print(
-                    f'[FAIL] {pkg_name} {actual_ver}, please install {suggest_ver}')
+                    f'[FAIL] {pkg_name:15} {actual_ver}, please install {suggest_ver}')
             else:
                 print(f'[OK] {pkg_name} {actual_ver}')
         elif way == '>':
             if actual_ver > suggest_ver:
                 print(
-                    f'[OK] {pkg_name} {actual_ver}')
+                    f'[OK] {pkg_name:15} {actual_ver}')
             else:
                 print(
                     f'[FAIL] {pkg_name} {actual_ver}, please upgrade to {suggest_ver}')
         elif way == '<':
             if actual_ver < suggest_ver:
-                print(f'[OK] {pkg_name} {actual_ver}')
+                print(f'[OK] {pkg_name:15} {actual_ver}')
             else:
                 print(
                     f'[FAIL] {pkg_name} {actual_ver}, please downgrade to {suggest_ver}')

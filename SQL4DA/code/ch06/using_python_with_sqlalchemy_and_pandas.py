@@ -16,7 +16,6 @@ d = {
 check_packages(d)
 from sqlalchemy import create_engine
 import pandas as pd
-import matplotlib.pyplot as plt
 
 # define connection string:
 cnxn_string = (

@@ -44,4 +44,24 @@ SQLAlchemy is a Python SQL toolkit and Object-Relational Mapper (ORM) that maps 
 \figures{fig6-21}{An ORM maps rows in a database to objects in memory}
 
 \subsection{Writing Data to the Database Using Python}
-If you have your data in a pandas DataFrame, you can write data back to the database using the pandas \verb|to_sql(…)| function, which requires two parameters: the name of the table to write to and the connection. Best of all, the \verb|to_sql(…)| function can also create the target table for you by inferring column types using a DataFrame's data types. 
+If you have your data in a pandas DataFrame, you can write data back to the database using the pandas \verb|to_sql(…)| function, which requires two parameters: the name of the table to write to and the connection. Best of all, the \verb|to_sql(…)| function can also create the target table for you by inferring column types using a DataFrame's data types.
+
+\subsection{Best Practices for Importing and Exporting Data}
+At this point, you have seen several different methods for reading and writing data
+between your computer and your database. Each method has its own use case and
+purpose. Generally, there are going to be two key factors that should guide your
+decision-making process:
+\begin{itemize}
+    \item You should try to access the database with the same tool that you will use to analyze the data. As you add more steps to get your data from the database to your analytics tool, you increase the ways in which new errors can arise. When you cannot access the database using the same tool that you will use to process the data, you should use psql to read and write CSV files to your database.
+    \item  When writing data, you can save time by using the COPY or $\backslash$COPY commands.
+\end{itemize}
+\section{Going Passwordless}
+A .pgpass file specifies the parameters that you use to connect to your database, including your password. All of the programmatic methods of accessing the database discussed in this chapter (using either psql or Python) will allow you to skip the password parameter if your .pgpass file contains the password for the matching hostname, database, and username. This not only saves you time but also increases the security of your database because you can freely share your code without having to worry about passwords embedded in the code.
+
+On Unix-based systems and macOS, you can create the .pgpass file in your home directory. On Windows, you can create the file in \verb|%APPDATA%\postgresql\ pgpass.conf|.(如果路径不存，手动新建文件夹和文件) \verb|%APPDATA%| is a Windows system value that points to the current application data folder. You can get the actual value of it by opening Windows Explorer, typing the exact word \verb|%APPDATA%|, into the address bar and hitting Enter. The folder you are in is the folder this \verb|%APPDATA%| value points to. The .pgpass file should contain one line for every database connection that you want to store, and it should follow this format (customized for your database parameters):
+\begin{verbatim}
+    hostname:port:database:username:password
+    # localhost:5432:sql4da:postgres:my_password
+\end{verbatim}
+
+创建完之后，\verb|psql -h localhost -p 5432 -d sql4da -U postgres| 就不再需要输入密码了。
