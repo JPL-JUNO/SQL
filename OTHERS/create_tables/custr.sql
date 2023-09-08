@@ -1,9 +1,11 @@
 -- Active: 1691027669001@@127.0.0.1@3306@bank
 
+DROP TABLE IF EXISTS custr;
+
 CREATE TABLE
-    custr(
+    IF NOT EXISTS custr(
         custr_nbr VARCHAR(32) COMMENT '客户号',
-        cifname CHAR COMMENT '姓名',
+        cifname VARCHAR(32) COMMENT '姓名',
         class_code VARCHAR(255) COMMENT '客户分类',
         comp_name VARCHAR(255) COMMENT '单位名称',
         cred_limit INT COMMENT '客户信用额度',
@@ -16,8 +18,87 @@ CREATE TABLE
         work_calls ENUM("No", "Yes") COMMENT '能否工作事件联系',
         yr_in_comp INT COMMENT '个人工龄',
         int_taxcod VARCHAR(255) COMMENT '职务/岗位',
-        income_ann FLOAT COMMENT '个人睡前年收入',
+        income_ann FLOAT COMMENT '个人税前年收入',
         occu_desc VARCHAR(255) COMMENT '职业描述',
         occu_type VARCHAR(255) COMMENT '职业',
         dt DATE COMMENT '日期分区'
+    );
+
+INSERT INTO custr
+VALUES (
+        '0000001',
+        '好先生',
+        '一级客户',
+        '好公司',
+        100000,
+        '1987-03-02',
+        '本科',
+        'male',
+        '已婚',
+        '高新技术企业',
+        '科技',
+        'No',
+        10,
+        '高级开发人员',
+        900000,
+        '高新技术企业开发',
+        'Python开发',
+        '2022-01-09'
+    ), (
+        '0000002',
+        '李先生',
+        '一级客户',
+        '好公司',
+        200000,
+        '1988-03-02',
+        '本科',
+        'male',
+        '已婚',
+        '高新技术企业',
+        '科技',
+        'No',
+        7,
+        '高级开发人员',
+        700000,
+        '高新技术企业开发',
+        'Python开发',
+        '2022-07-09'
+    ), (
+        '0000003',
+        '李先生',
+        '二级客户',
+        '它公司',
+        200000,
+        '1998-03-02',
+        '本科',
+        'male',
+        '未婚',
+        '高新技术企业',
+        '科技',
+        'No',
+        3,
+        '开发人员',
+        150000,
+        '高新技术企业开发',
+        'CPP开发',
+        '2023-07-09'
+    ), (
+        '0000002',
+        '李先生',
+        '一级客户',
+        '好公司',
+        500000,
+        '1988-03-02',
+        '本科',
+        'male',
+        '已婚',
+        '高新技术企业',
+        '科技',
+        'No',
+        7,
+        '高级开发人员',
+        700000,
+        '高新技术企业开发',
+        'Python开发',
+        '2023-07-09'
     );
