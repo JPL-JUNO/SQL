@@ -8,3 +8,4 @@
 _minted-Main
 *.listing
 *.pyc
+*.vscode
